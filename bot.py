@@ -70,28 +70,3 @@ class Explorer(Bot):
     def determine_next_move(self, snake: Snake, other_snakes: List[Snake], candies: List[np.array]) -> Move:
         return create_grid (self, snake, other_snakes, candies)
 
-    def _determine_possible_moves(self, snake, other_snake) -> List[Move]:
-        """
-        Return a list with all moves that we want to do. Later we'll choose one from this list randomly. This method
-        will be used during unit-testing
-        """
-        # highest priority, a move that is on the grid
-        on_grid = [move for move in MOVE_VALUE_TO_DIRECTION
-                   if is_on_grid(snake[0] + MOVE_VALUE_TO_DIRECTION[move], self.grid_size)]
-        if not on_grid:
-            return list(Move)
-
-        # then avoid collisions with other snakes
-        collision_free = [move for move in on_grid
-                          if is_on_grid(snake[0] + MOVE_VALUE_TO_DIRECTION[move], self.grid_size)
-                          and not collides(snake[0] + MOVE_VALUE_TO_DIRECTION[move], [snake, other_snake])]
-        if collision_free:
-            return collision_free
-        else:
-            return on_grid
-
-    def choose_move(self, moves: List[Move]) -> Move:
-        """
-        Randomly pick a move
-        """
-        return choice(moves)
