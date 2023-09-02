@@ -39,7 +39,7 @@ def create_grid (self, snake: Snake, other_snakes: List[Snake], candies: List[np
         scoregrid = scoregrid + (100 / (1 +(xg-c[0])**2+(yg-c[1])**2))
     other_snakes.append(snake)
     for snake in other_snakes:
-        print (snake)
+        # print (snake)
         for p in snake.positions:
             scoregrid[self.grid_size[1]-1-p[1]][p[0]] = -10
     # print (scoregrid)
