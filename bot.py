@@ -35,19 +35,29 @@ def create_grid (self, snake: Snake, other_snakes: List[Snake], candies: List[np
     xg = np.outer(ny, x)
     yg = np.outer(y, nx)
     scoregrid = np.zeros(self.grid_size)
+    #bias to edges
+    scoregrid = scoregrid + (150 / (1 +abs(xg-self.grid_size[0]/2)+abs(yg-self.grid_size[1]/2)))
     for c in candies:
         scoregrid = scoregrid + (100 / (1 +(xg-c[0])**2+(yg-c[1])**2))
-    other_snakes.append(snake)
-    for snake in other_snakes:
-        # print (snake)
-        for p in snake.positions:
+    for enemy in other_snakes:
+        for p in enemy.positions:
+            scoregrid = scoregrid - (10 / (1 +(xg-p[0])**4+(yg-p[1])**4))
+            scoregrid[self.grid_size[1]-1-p[1]][p[0]] = -10
+
+    # don't count the first 3 sections since we can never colide with them
+    head = 3;
+    for p in snake.positions:
+        if head > 0:
+            head = head - 1
+        else:
+            scoregrid = scoregrid - (20 / (1 +(xg-p[0])**2+(yg-p[1])**2))
             scoregrid[self.grid_size[1]-1-p[1]][p[0]] = -10
     # print (scoregrid)
     max_move = []
-    score = -9;
+    score = -20;
     for move in MOVE_VALUE_TO_DIRECTION:
         target = snake[0] + MOVE_VALUE_TO_DIRECTION[move]
-        if is_on_grid(target, self.grid_size):
+        if is_on_grid(target, self.grid_size) and (target[0] != snake[1][0] or target[1] != snake[1][1]):
             # print (move)
             # print(target)
             # print ("score: %.1f" %  scoregrid[self.grid_size[1]-1-target[1]][target[0]])
