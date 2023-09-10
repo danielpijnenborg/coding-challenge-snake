@@ -81,5 +81,9 @@ class Explorer(Bot):
         return 'Daniel'
 
     def determine_next_move(self, snake: Snake, other_snakes: List[Snake], candies: List[np.array]) -> Move:
+        # stop when we have a winning score, thanks to Mukunda
+        for enemy in other_snakes:
+            if (len(snake.positions) > 2*len(enemy.positions)):
+                return [];
         return create_grid (self, snake, other_snakes, candies)
 
